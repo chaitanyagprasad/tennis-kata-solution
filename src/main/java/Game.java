@@ -18,11 +18,19 @@ public class Game {
     }
 
     public static MatchScores pointToFirst() {
+        if( playerTwo.hasAdvantage() ) {
+            playerTwo.loseAdvantage();
+            return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+        }
         playerOne.winPoint();
         return SetScore.of(playerOne.getScore(), playerTwo.getScore());
     }
 
     public static MatchScores pointToSecond() {
+        if( playerOne.hasAdvantage() ) {
+            playerOne.loseAdvantage();
+            return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+        }
         playerTwo.winPoint();
         return SetScore.of(playerOne.getScore(), playerTwo.getScore());
     }

@@ -27,4 +27,25 @@ class GameTest {
         assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.FIFTEEN);
         assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.FIFTEEN);
     }
+
+    @Test
+    void loseAdvantage() {
+        Game.startGame();
+
+        for( int i = 0; i < 3; i++ ) {
+            Game.pointToFirst();
+            Game.pointToSecond();
+        }
+        // advantage to player one
+        Game.pointToFirst();
+        assertThat(Game.playerOne.getScore()).isEqualTo(TennisScore.ADVANTAGE);
+        assertThat(Game.playerTwo.getScore()).isEqualTo(TennisScore.FORTY);
+
+        Game.pointToSecond();
+        assertThat(Game.playerOne.getScore()).isEqualTo(TennisScore.FORTY);
+        assertThat(Game.playerTwo.getScore()).isEqualTo(TennisScore.FORTY);
+
+
+
+    }
 }

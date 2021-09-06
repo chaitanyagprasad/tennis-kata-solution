@@ -21,4 +21,12 @@ public class Player {
     public void winPoint() {
         score = score.getNextScore();
     }
+
+    public void loseAdvantage() {
+        score = TennisScore.FORTY;
+    }
+
+    public boolean hasAdvantage() {
+        return this.score.equals(TennisScore.ADVANTAGE);
+    }
 }
