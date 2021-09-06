@@ -13,6 +13,18 @@ class GameTest {
 
         assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.ZERO);
         assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.ZERO);
+    }
 
+    @Test
+    void pointIncrement() {
+        Game.startGame();
+        MatchScores matchScores = Game.pointToFirst();
+
+        assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.FIFTEEN);
+        assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.ZERO);
+
+        matchScores = Game.pointToSecond();
+        assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.FIFTEEN);
+        assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.FIFTEEN);
     }
 }

@@ -17,4 +17,14 @@ public class Game {
         );
     }
 
+    public static MatchScores pointToFirst() {
+        playerOne.winPoint();
+        return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+    }
+
+    public static MatchScores pointToSecond() {
+        playerTwo.winPoint();
+        return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+    }
+
 }
