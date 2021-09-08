@@ -7,26 +7,19 @@ import lombok.Data;
 public class Player {
 
     private String name;
-//    private GameScore score;
     private SetScore setScore;
 
     public Player(String name) {
         this.name = name;
-//        this.score = GameScore.ZERO;
         this.setScore = new SetScore();
     }
-
-    /*public SetScore getScore() {
-        return this.score;
-    }*/
 
     public SetScore getSetScore(){
         return this.setScore;
     }
 
     public void winGame() {
-        Integer currentGameWins = this.setScore.getGameWins();
-        this.setScore.setGameWins(++currentGameWins);
+        this.setScore.winGame();
     }
 
     public void winPoint() {
@@ -39,5 +32,9 @@ public class Player {
 
     public boolean hasAdvantage() {
         return this.setScore.getGameScore().equals(GameScore.ADVANTAGE);
+    }
+
+    public SetScore resetScore() {
+        return this.setScore.resetScore();
     }
 }

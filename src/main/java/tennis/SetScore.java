@@ -2,7 +2,6 @@ package tennis;
 
 import enums.GameScore;
 import lombok.Data;
-import tennis.MatchScores;
 
 @Data
 public class SetScore {
@@ -20,5 +19,11 @@ public class SetScore {
 
     public void winGame() {
         ++ this.gameWins;
+        resetScore();
+    }
+
+    public SetScore resetScore() {
+        gameScore = GameScore.ZERO;
+        return this;
     }
 }

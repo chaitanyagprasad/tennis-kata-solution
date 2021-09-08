@@ -62,4 +62,39 @@ class GameTest {
                 Game.playerTwo.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
     }
+
+    @Test
+    void winGame() {
+        Game.startGame();
+
+        for( int i = 0; i < 3; i++ ) {
+            Game.pointToFirst();
+        }
+
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(0);
+
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(0);
+
+        assertThat(
+                Game.playerOne.getSetScore().getGameScore()
+        ).isEqualTo(GameScore.FORTY);
+
+        assertThat(
+                Game.playerTwo.getSetScore().getGameScore()
+        ).isEqualTo(GameScore.ZERO);
+
+        MatchScores matchScores =  Game.pointToFirst();
+
+        assertThat(
+                matchScores.getPlayerOneScore().getGameWins()
+        ).isEqualTo(1);
+        assertThat(
+                matchScores.getPlayerTwoScore().getGameWins()
+        ).isEqualTo(0);
+
+    }
 }
