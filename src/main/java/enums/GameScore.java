@@ -1,14 +1,13 @@
 package enums;
 
-import lombok.Data;
 import lombok.Getter;
 
 
 /**
- * represents possible scores in a set
+ * represents possible scores in a game
  */
 @Getter
-public enum TennisScore {
+public enum GameScore {
     WIN("WIN", null),
     ADVANTAGE("A", WIN),
     FORTY("40", ADVANTAGE),
@@ -17,9 +16,9 @@ public enum TennisScore {
     ZERO("0", FIFTEEN);
 
     private String stringScore;
-    private TennisScore nextScore;
+    private GameScore nextScore;
 
-    TennisScore(String stringScore, TennisScore nextScore) {
+    GameScore(String stringScore, GameScore nextScore) {
         this.stringScore = stringScore;
         this.nextScore = nextScore;
     }

@@ -1,18 +1,24 @@
 package tennis;
 
-import enums.TennisScore;
+import enums.GameScore;
+import lombok.Data;
+import tennis.MatchScores;
 
+@Data
+public class SetScore {
+    private Integer gameWins;
+    private GameScore gameScore;
 
-/**
- * Holds a set score for players
- */
-public class SetScore extends MatchScores {
-    public SetScore(TennisScore playerOneScore, TennisScore playerTwoScore) {
-        super(playerOneScore, playerTwoScore);
+    public SetScore() {
+        this.gameWins = 0;
+        this.gameScore = GameScore.ZERO;
     }
 
-    public static SetScore of(TennisScore firstScore, TennisScore secondScore) {
-        return new SetScore(firstScore, secondScore);
+    public void winPoint() {
+        gameScore = gameScore.getNextScore();
     }
 
+    public void winGame() {
+        ++ this.gameWins;
+    }
 }

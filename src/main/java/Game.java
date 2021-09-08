@@ -1,7 +1,5 @@
-import enums.TennisScore;
 import tennis.MatchScores;
 import tennis.Player;
-import tennis.SetScore;
 
 public class Game {
 
@@ -11,28 +9,25 @@ public class Game {
     public static MatchScores startGame() {
         playerOne = new Player("Federer");
         playerTwo = new Player("Djockovic");
-        return new MatchScores(
-                playerOne.getScore(),
-                playerTwo.getScore()
-        );
+        return MatchScores.of(playerOne.getSetScore(), playerOne.getSetScore());
     }
 
     public static MatchScores pointToFirst() {
         if( playerTwo.hasAdvantage() ) {
             playerTwo.loseAdvantage();
-            return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+            return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
         }
         playerOne.winPoint();
-        return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+        return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
     }
 
     public static MatchScores pointToSecond() {
         if( playerOne.hasAdvantage() ) {
             playerOne.loseAdvantage();
-            return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+            return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
         }
         playerTwo.winPoint();
-        return SetScore.of(playerOne.getScore(), playerTwo.getScore());
+        return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
     }
 
 }

@@ -1,32 +1,43 @@
 package tennis;
 
-import enums.TennisScore;
+import enums.GameScore;
 import lombok.Data;
 
 @Data
 public class Player {
 
     private String name;
-    private TennisScore score;
+//    private GameScore score;
+    private SetScore setScore;
 
     public Player(String name) {
         this.name = name;
-        this.score = TennisScore.ZERO;
+//        this.score = GameScore.ZERO;
+        this.setScore = new SetScore();
     }
 
-    public TennisScore getScore() {
+    /*public SetScore getScore() {
         return this.score;
+    }*/
+
+    public SetScore getSetScore(){
+        return this.setScore;
+    }
+
+    public void winGame() {
+        Integer currentGameWins = this.setScore.getGameWins();
+        this.setScore.setGameWins(++currentGameWins);
     }
 
     public void winPoint() {
-        score = score.getNextScore();
+        setScore.winPoint();
     }
 
     public void loseAdvantage() {
-        score = TennisScore.FORTY;
+        this.setScore.setGameScore(GameScore.FORTY);
     }
 
     public boolean hasAdvantage() {
-        return this.score.equals(TennisScore.ADVANTAGE);
+        return this.setScore.getGameScore().equals(GameScore.ADVANTAGE);
     }
 }

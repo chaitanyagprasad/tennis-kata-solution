@@ -1,9 +1,8 @@
-import enums.TennisScore;
+import enums.GameScore;
 import org.junit.jupiter.api.Test;
 import tennis.MatchScores;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
@@ -11,8 +10,11 @@ class GameTest {
     void startGame() {
         MatchScores matchScores = Game.startGame();
 
-        assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.ZERO);
-        assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.ZERO);
+        assertThat(matchScores.getPlayerOneScore().getGameScore()).isEqualTo(GameScore.ZERO);
+        assertThat(matchScores.getPlayerTwoScore().getGameScore()).isEqualTo(GameScore.ZERO);
+
+        assertThat(matchScores.getPlayerOneScore().getGameWins()).isEqualTo(0);
+        assertThat(matchScores.getPlayerTwoScore().getGameWins()).isEqualTo(0);
     }
 
     @Test
@@ -20,12 +22,20 @@ class GameTest {
         Game.startGame();
         MatchScores matchScores = Game.pointToFirst();
 
-        assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.FIFTEEN);
-        assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.ZERO);
+        assertThat(
+                matchScores.getPlayerOneScore().getGameScore()
+        ).isEqualTo(GameScore.FIFTEEN);
+        assertThat(
+                matchScores.getPlayerTwoScore().getGameScore()
+        ).isEqualTo(GameScore.ZERO);
 
         matchScores = Game.pointToSecond();
-        assertThat(matchScores.getPlayerOneScore()).isEqualTo(TennisScore.FIFTEEN);
-        assertThat(matchScores.getPlayerTwoScore()).isEqualTo(TennisScore.FIFTEEN);
+        assertThat(
+                matchScores.getPlayerOneScore().getGameScore()
+        ).isEqualTo(GameScore.FIFTEEN);
+        assertThat(
+                matchScores.getPlayerTwoScore().getGameScore()
+        ).isEqualTo(GameScore.FIFTEEN);
     }
 
     @Test
@@ -36,16 +46,20 @@ class GameTest {
             Game.pointToFirst();
             Game.pointToSecond();
         }
-        // advantage to player one
         Game.pointToFirst();
-        assertThat(Game.playerOne.getScore()).isEqualTo(TennisScore.ADVANTAGE);
-        assertThat(Game.playerTwo.getScore()).isEqualTo(TennisScore.FORTY);
+        assertThat(
+                Game.playerOne.getSetScore().getGameScore()
+        ).isEqualTo(GameScore.ADVANTAGE);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameScore()
+        ).isEqualTo(GameScore.FORTY);
 
         Game.pointToSecond();
-        assertThat(Game.playerOne.getScore()).isEqualTo(TennisScore.FORTY);
-        assertThat(Game.playerTwo.getScore()).isEqualTo(TennisScore.FORTY);
-
-
-
+        assertThat(
+                Game.playerOne.getSetScore().getGameScore()
+        ).isEqualTo(GameScore.FORTY);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameScore()
+        ).isEqualTo(GameScore.FORTY);
     }
 }
