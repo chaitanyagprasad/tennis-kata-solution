@@ -1,13 +1,9 @@
 import enums.GameScore;
 import exception.MatchOverException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import tennis.MatchScores;
-import tennis.Player;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -305,5 +301,226 @@ class GameTest {
         assertThat(
                 Game.isTieBreaker
         ).isTrue();
+    }
+
+    @Test
+    void testIncrementDuringTieBreaker() {
+
+        for( int i = 0; i < 20; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 20; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(5);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(5);
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+
+        assertThat(
+                Game.isTieBreaker
+        ).isTrue();
+
+        Game.resolve(
+            Game.playerOne,
+                Game.playerTwo
+        );
+
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(7);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(6);
+
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(7);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(7);
+    }
+
+    @Test
+    void winFromTieBreak() {
+        for( int i = 0; i < 20; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 20; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(5);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(5);
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+
+        assertThat(
+                Game.isTieBreaker
+        ).isTrue();
+
+        Game.resolve(
+                Game.playerOne,
+                Game.playerTwo
+        );
+
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(7);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(6);
+
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(7);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(7);
+
+        for( int i = 0; i < 2; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+
+        assertThat(
+                Game.winner
+        ).isNotBlank();
+        assertThat(
+                Game.winner
+        ).isEqualTo("Djockovic");
+    }
+
+    @Test
+    void winFromTieBreakPlayerOne() {
+        for( int i = 0; i < 20; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 20; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(5);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(5);
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+
+        assertThat(
+                Game.isTieBreaker
+        ).isTrue();
+
+        Game.resolve(
+                Game.playerOne,
+                Game.playerTwo
+        );
+
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(7);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(6);
+
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
+        assertThat(
+                Game.playerOne.getSetScore().getGameWins()
+        ).isEqualTo(7);
+        assertThat(
+                Game.playerTwo.getSetScore().getGameWins()
+        ).isEqualTo(7);
+
+        for( int i = 0; i < 2; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        assertThat(
+                Game.winner
+        ).isNotBlank();
+        assertThat(
+                Game.winner
+        ).isEqualTo("Federer");
     }
 }

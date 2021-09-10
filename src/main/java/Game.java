@@ -10,12 +10,13 @@ public class Game {
 
     public static String winner;
 
-    static boolean isTieBreaker = false;
+    static boolean isTieBreaker;
 
     public static MatchScores startGame() {
         playerOne = new Player("Federer");
         playerTwo = new Player("Djockovic");
         winner = new String();
+        isTieBreaker = false;
         return MatchScores.of(playerOne.getSetScore(), playerOne.getSetScore());
     }
 
