@@ -1,12 +1,22 @@
 import enums.GameScore;
 import exception.MatchOverException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import tennis.MatchScores;
+import tennis.Player;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.*;
 
 class GameTest {
+
+    @BeforeEach
+    void setUp() {
+        Game.startGame();
+    }
 
     @Test
     void startGame() {
@@ -21,8 +31,11 @@ class GameTest {
 
     @Test
     void pointIncrement() {
-        Game.startGame();
-        MatchScores matchScores = Game.pointToFirst();
+
+        MatchScores matchScores = Game.resolve(
+                Game.playerOne,
+                Game.playerTwo
+        );
 
         assertThat(
                 matchScores.getPlayerOneScore().getGameScore()
@@ -31,7 +44,10 @@ class GameTest {
                 matchScores.getPlayerTwoScore().getGameScore()
         ).isEqualTo(GameScore.ZERO);
 
-        matchScores = Game.pointToSecond();
+        matchScores = Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
         assertThat(
                 matchScores.getPlayerOneScore().getGameScore()
         ).isEqualTo(GameScore.FIFTEEN);
@@ -45,10 +61,19 @@ class GameTest {
         Game.startGame();
 
         for( int i = 0; i < 3; i++ ) {
-            Game.pointToFirst();
-            Game.pointToSecond();
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
         }
-        Game.pointToFirst();
+        Game.resolve(
+                Game.playerOne,
+                Game.playerTwo
+        );
         assertThat(
                 Game.playerOne.getSetScore().getGameScore()
         ).isEqualTo(GameScore.ADVANTAGE);
@@ -56,7 +81,10 @@ class GameTest {
                 Game.playerTwo.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
 
-        Game.pointToSecond();
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
         assertThat(
                 Game.playerOne.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
@@ -67,10 +95,11 @@ class GameTest {
 
     @Test
     void winGame() {
-        Game.startGame();
-
         for( int i = 0; i < 3; i++ ) {
-            Game.pointToFirst();
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
         }
 
         assertThat(
@@ -89,7 +118,10 @@ class GameTest {
                 Game.playerTwo.getSetScore().getGameScore()
         ).isEqualTo(GameScore.ZERO);
 
-        MatchScores matchScores =  Game.pointToFirst();
+        MatchScores matchScores =  Game.resolve(
+                Game.playerOne,
+                Game.playerTwo
+        );
 
         assertThat(
                 matchScores.getPlayerOneScore().getGameWins()
@@ -106,8 +138,14 @@ class GameTest {
         Game.startGame();
 
         for( int i = 0; i < 3; i++ ) {
-            Game.pointToFirst();
-            Game.pointToSecond();
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
         }
 
         assertThat(
@@ -117,7 +155,10 @@ class GameTest {
                 Game.playerTwo.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
 
-        Game.pointToSecond();
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
         assertThat(
                 Game.playerOne.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
@@ -125,7 +166,10 @@ class GameTest {
                 Game.playerTwo.getSetScore().getGameScore()
         ).isEqualTo(GameScore.ADVANTAGE);
 
-        Game.pointToFirst();
+        Game.resolve(
+                Game.playerOne,
+                Game.playerTwo
+        );
         assertThat(
                 Game.playerOne.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
@@ -133,8 +177,14 @@ class GameTest {
                 Game.playerTwo.getSetScore().getGameScore()
         ).isEqualTo(GameScore.FORTY);
 
-        Game.pointToSecond();
-        Game.pointToSecond();
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
+        Game.resolve(
+                Game.playerTwo,
+                Game.playerOne
+        );
         assertThat(
                 Game.playerOne.getSetScore().getGameWins()
         ).isEqualTo(0);
@@ -148,8 +198,11 @@ class GameTest {
     void playerOneDominates() {
         Game.startGame();
 
-        for(int i = 0; i< 24; i++) {
-            Game.pointToFirst();
+        for(int i = 0; i < 24; i++) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
         }
 
         assertThat(
@@ -167,10 +220,11 @@ class GameTest {
 
     @Test
     void playerTwoDominates() {
-        Game.startGame();
-
         for(int i = 0; i< 24; i++) {
-            Game.pointToSecond();
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
         }
 
         assertThat(
@@ -189,10 +243,11 @@ class GameTest {
     @Test
     void gameOverAndTriesToIncrementPoint() {
 
-        Game.startGame();
-
-        for(int i = 0; i< 24; i++) {
-            Game.pointToSecond();
+        for(int i = 0; i < 24; i++) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
         }
 
         assertThat(
@@ -207,7 +262,48 @@ class GameTest {
         ).isEqualTo("Djockovic");
 
         assertThatExceptionOfType(MatchOverException.class)
-                .isThrownBy(Game::pointToSecond);
+                .isThrownBy(() -> Game.resolve(
+                        Game.playerOne,
+                        Game.playerTwo
+                ));
 
+    }
+
+    @Test
+    void testTieBreaker() {
+        for(int i = 0; i < 20; i++) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+
+        for(int i = 0; i < 20; i++) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerOne,
+                    Game.playerTwo
+            );
+        }
+
+        assertThat(
+                Game.winner
+        ).isEmpty();
+
+        for( int i = 0; i < 4; i++ ) {
+            Game.resolve(
+                    Game.playerTwo,
+                    Game.playerOne
+            );
+        }
+        assertThat(
+                Game.isTieBreaker
+        ).isTrue();
     }
 }

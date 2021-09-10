@@ -26,6 +26,10 @@ public class Player {
         setScore.winPoint();
     }
 
+    public void winTieBreakGame() {
+        setScore.incrementTieBreakPoint();
+    }
+
     public void loseAdvantage() {
         this.setScore.setGameScore(GameScore.FORTY);
     }

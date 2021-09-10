@@ -26,4 +26,8 @@ public class SetScore {
         gameScore = GameScore.ZERO;
         return this;
     }
+
+    public void incrementTieBreakPoint() {
+        ++ gameWins;
+    }
 }

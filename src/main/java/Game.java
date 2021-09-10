@@ -8,82 +8,66 @@ public class Game {
     static Player playerOne;
     static Player playerTwo;
 
-    public static String winner = "";
+    public static String winner;
+
+    static boolean isTieBreaker = false;
 
     public static MatchScores startGame() {
         playerOne = new Player("Federer");
         playerTwo = new Player("Djockovic");
+        winner = new String();
         return MatchScores.of(playerOne.getSetScore(), playerOne.getSetScore());
     }
 
-//    public static MatchScores resolve(Player pointWinner, Player pointLoser) {
-//
-//    }
-
-    public static MatchScores pointToFirst() {
+    public static MatchScores resolve(Player pointWinner, Player pointLoser) {
         if( !winner.isBlank() || !winner.isEmpty()   ) {
             throw new MatchOverException(
-                    "The match is over and winner is" + winner
+                    "The match is over and winner is " + winner
             );
         }
-        if( playerTwo.hasAdvantage() ) {
-            playerTwo.loseAdvantage();
-            return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
-        }
-        if( !isDeuce() && (playerOne.getSetScore().getGameScore().equals(GameScore.FORTY) ||
-                playerOne.getSetScore().getGameScore().equals(GameScore.ADVANTAGE)) ) {
-            playerOne.winGame();
-            if( isThereWinner() ) {
+        if( isTieBreaker ) {
+            pointWinner.winTieBreakGame();
+            if( isThereWinner(playerOne, playerTwo) ) {
                 return null;
             }
+            return MatchScores.of(pointWinner.getSetScore(), pointLoser.getSetScore());
+        }
+        if( pointLoser.hasAdvantage() ) {
+            pointLoser.loseAdvantage();
+            return MatchScores.of(pointWinner.getSetScore(), pointLoser.getSetScore());
+        }
+        if( !isDeuce() && (pointWinner.getSetScore().getGameScore().equals(GameScore.FORTY) ||
+                pointWinner.getSetScore().getGameScore().equals(GameScore.ADVANTAGE)) ) {
+            pointWinner.winGame();
+            if( isThereWinner(pointWinner, pointLoser) ) {
+                return null;
+            }
+            if( pointWinner.getSetScore().getGameWins() == 6 && pointLoser.getSetScore().getGameWins() == 6 ) {
+                isTieBreaker = true;
+            }
             return MatchScores.of(
-                    playerOne.getSetScore(),
-                    playerTwo.resetScore()
+                    pointWinner.getSetScore(),
+                    pointLoser.resetScore()
             );
         }
-        playerOne.winPoint();
-        return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
+        pointWinner.winPoint();
+        return MatchScores.of(pointWinner.getSetScore(), pointLoser.getSetScore());
     }
 
-    public static MatchScores pointToSecond() {
-        if( !winner.isBlank() || !winner.isEmpty()   ) {
-            throw new MatchOverException(
-                    "The match is over and winner is" + winner
-            );
-        }
-        if( playerOne.hasAdvantage() ) {
-            playerOne.loseAdvantage();
-            return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
-        }
-        if( !isDeuce() && (playerTwo.getSetScore().getGameScore().equals(GameScore.FORTY) ||
-                playerTwo.getSetScore().getGameScore().equals(GameScore.ADVANTAGE)) ) {
-            playerTwo.winGame();
-            if( isThereWinner() ) {
-                return null;
-            }
-            return MatchScores.of(
-                    playerOne.resetScore(),
-                    playerTwo.getSetScore()
-            );
-        }
-        playerTwo.winPoint();
-        return MatchScores.of(playerOne.getSetScore(), playerTwo.getSetScore());
-    }
 
     private static boolean isDeuce() {
         return playerOne.getSetScore().getGameScore().equals(GameScore.FORTY) &&
                 playerTwo.getSetScore().getGameScore().equals(GameScore.FORTY);
     }
 
-    private static boolean isThereWinner() {
+    private static boolean isThereWinner(Player playerOne, Player playerTwo) {
         if( playerOne.getSetScore().getGameWins() >= 6 && playerTwo.getSetScore().getGameWins() <=4 ) {
             winner = playerOne.getName();
             return true;
         }
-        if(
+        if(     playerOne.getSetScore().getGameWins() >= 6 &&
                 playerOne.getSetScore().getGameWins() > playerTwo.getSetScore().getGameWins() &&
-                        playerOne.getSetScore().getGameWins() >= 6 &&
-                        playerOne.getSetScore().getGameWins() > 1
+                        playerOne.getSetScore().getGameWins() - playerTwo.getSetScore().getGameWins() > 1
         ) {
             winner = playerOne.getName();
             return true;
@@ -92,10 +76,10 @@ public class Game {
             winner = playerTwo.getName();
             return true;
         }
-        if(
+        if(     playerTwo.getSetScore().getGameWins() >= 6 &&
                 playerTwo.getSetScore().getGameWins() > playerOne.getSetScore().getGameWins() &&
-                        playerTwo.getSetScore().getGameWins() >= 6 &&
-                        playerTwo.getSetScore().getGameWins() > 1
+                        playerTwo.getSetScore().getGameWins() -
+                        playerOne.getSetScore().getGameWins() > 1
         ) {
             winner = playerTwo.getName();
             return true;
